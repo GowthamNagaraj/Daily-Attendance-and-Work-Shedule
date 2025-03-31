@@ -1,4 +1,10 @@
 import React, { useEffect, useState } from 'react'
+import { Link, NavLink } from 'react-router-dom'
+const menus = [
+    { id: 1, name: 'Dashboard',path:'/', icon: 'bi bi-speedometer2' },
+    { id: 2, name: 'Attendance',path:'/attendance', icon: 'bi bi-activity' },
+    { id: 3, name: 'Schedule',path:'/schedule', icon: 'bi bi-back' },
+]
 
 const SideBar = () => {
 
@@ -7,13 +13,14 @@ const SideBar = () => {
         isTablet: false,
     });
     const [toggle, setToggle] = useState(true);
-    const [hidden, setHidden] = useState(false)
+    const [hidden, setHidden] = useState(false);
 
     useEffect(()=>{
         ResponsiveViews()
         window.addEventListener('resize', function(){
             ResponsiveViews()
         })
+        // if(window.location.pathname)
     },[])
 
     function ResponsiveViews(){
@@ -69,11 +76,10 @@ const SideBar = () => {
     <div 
         className='container' 
         style={{ 
-            backgroundColor: 'lightblue', 
-            padding: '20px',
+            backgroundColor: '#E8F9FF', 
             transition: 'width 0.5s',
-            width: responsiveView.isTablet ? '7%': responsiveView.isMobile ? '100%' : '15%', 
-            height:'auto',
+            width: responsiveView.isTablet ? '5%': responsiveView.isMobile ? '100%' : '15%', 
+            height:responsiveView.isMobile ? '40px' : '100vh',
             position: 'fixed',
             top:!responsiveView.isMobile ? 0 : '',
             left:0,
@@ -93,6 +99,19 @@ const SideBar = () => {
                   }
               </button>
           </div>
+        <div className="row" style={{position: 'absolute',top:'25%',left:'25%',translate: responsiveView.isMobile ? '5vw -10%' : '-10% -25%'}}>
+            <ul style={{display:'flex',justifyContent:'center',alignItems:'start',flexDirection:responsiveView.isMobile ? 'row' : 'column',margin: 'auto 0'}}>
+                {
+                    menus.map((list,index) => (
+                        <li key={index} style={{listStyle: 'none',lineHeight: '20px',marginBottom: '30px',color:'#578FCA'}}> <i className={list.icon} style={{fontSize: responsiveView.isTablet |responsiveView.isMobile ? '3vw' : '1.5vw', marginRight: responsiveView.isMobile ? '50px':'10px'}}></i>
+                            {
+                                responsiveView.isTablet | responsiveView.isMobile ? '' : <NavLink to={list.path} style={{fontSize: '1.5vw',textDecoration:'none',color:'#578FCA'}}>{list.name}</NavLink>
+                            }
+                        </li>
+                    ))
+                }
+            </ul>
+        </div>
     </div>
   )
 }
