@@ -1,9 +1,10 @@
 import React, { useEffect, useState } from 'react'
-import { Link, NavLink } from 'react-router-dom'
+import { Link, NavLink, Route, Routes } from 'react-router-dom'
+import AttendanceRecord from '../Pages/AttendanceRecord';
 const menus = [
-    { id: 1, name: 'Dashboard',path:'/', icon: 'bi bi-speedometer2' },
-    { id: 2, name: 'Attendance',path:'/attendance', icon: 'bi bi-activity' },
-    { id: 3, name: 'Schedule',path:'/schedule', icon: 'bi bi-back' },
+    // { id: 1, name: 'Dashboard',path:'/', icon: 'bi bi-speedometer2' },
+    { id: 2, name: 'Attendance',path:'/', icon: 'bi bi-activity' },
+    // { id: 3, name: 'Schedule',path:'/schedule', icon: 'bi bi-back' },
 ]
 
 const SideBar = () => {
@@ -14,6 +15,8 @@ const SideBar = () => {
     });
     const [toggle, setToggle] = useState(true);
     const [hidden, setHidden] = useState(false);
+    const [sidebarWidth, setSidebarWidth] = useState("15%")
+
 
     useEffect(()=>{
         ResponsiveViews()
@@ -27,6 +30,8 @@ const SideBar = () => {
         console.log("toggle: ", toggle);
         
         if(window.innerWidth <= 770){
+            setSidebarWidth("5%");
+
             setResponsiveView({
                 isTablet: true,
                 isMobile: false
@@ -37,6 +42,8 @@ const SideBar = () => {
                     isTablet: false,
                     isMobile: true
                 });
+                setSidebarWidth("100%");
+
                 setHidden(true)
             }else{
                 setResponsiveView({
@@ -44,12 +51,16 @@ const SideBar = () => {
                     isMobile: false
                 });
                 setToggle(true);
+                setSidebarWidth("5%");
+
             }
           }else{
             setResponsiveView({
                 isTablet: false,
                 isMobile: false
             });
+            setSidebarWidth("15%");
+
             setHidden(false)
           } 
     }
@@ -63,23 +74,28 @@ const SideBar = () => {
             isTablet: true,
             isMobile: false
         })
+        setSidebarWidth("5%")
+
        }else{
         setToggle(true);
         setResponsiveView({
             isTablet: false,
             isMobile: false
         })
+        setSidebarWidth("15%")
        }
     }
 
   return (
-    <div 
+    <div className="container-fluid">
+        {/* sidebar */}
+        <div 
         className='container' 
         style={{ 
-            backgroundColor: '#E8F9FF', 
+            backgroundColor: '#C7D9DD', 
             transition: 'width 0.5s',
-            width: responsiveView.isTablet ? '5%': responsiveView.isMobile ? '100%' : '15%', 
-            height:responsiveView.isMobile ? '40px' : '100vh',
+            width: sidebarWidth, 
+            height:responsiveView.isMobile ? '50px' : '100vh',
             position: 'fixed',
             top:!responsiveView.isMobile ? 0 : '',
             left:0,
@@ -112,6 +128,26 @@ const SideBar = () => {
                 }
             </ul>
         </div>
+    </div>
+
+    {/* main */}
+    <div className="container-fluid"
+        style={{
+            background: '#ADB2D4',
+            height: '100vh',
+            width: !toggle | responsiveView.isTablet ? '95vw' : responsiveView.isMobile ? '100vw' : `calc(100vw - 15vw)`,
+            position: 'absolute',
+            top: 0,
+            left: !toggle | responsiveView.isTablet ? '5%' : responsiveView.isMobile ? '0%' : '15%',
+            transition: 'all 0.5s',
+        }}
+    >
+        
+        <Routes>
+            <Route path='/' element={<AttendanceRecord />}/>
+        </Routes>
+
+    </div>
     </div>
   )
 }
